@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
 class UrlsController < ApplicationController
-  before_action :load_url, only: [:update]
+  before_action :load_url, only: %i[update show]
   def index
     urls = Url.all
     render json: { urls: urls }, status: :ok
+  end
+
+  def show
+    @url.increment!(:click_count)
+    redirect_to @url.long_url if @url.save
   end
 
   def create

@@ -38,6 +38,17 @@ const Dashboard = ({ history }) => {
     }
   };
 
+  const handleClick = link => {
+    try {
+      setTimeout(() => {
+        fetchUrls();
+      }, 1000);
+      window.open(link, "_blank");
+    } catch (error) {
+      logger.error(error);
+    }
+  };
+
   const fetchUrls = async () => {
     try {
       const response = await urlsApi.list();
@@ -74,7 +85,7 @@ const Dashboard = ({ history }) => {
           />
         </Container>
         <Container>
-          <ListUrls data={urls} pinUrl={pinUrl} />
+          <ListUrls data={urls} pinUrl={pinUrl} handleClick={handleClick} />
         </Container>
       </>
     );

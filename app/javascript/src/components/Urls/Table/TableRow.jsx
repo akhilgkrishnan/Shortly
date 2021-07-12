@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const TableRow = ({ data, pinUrl }) => {
+const TableRow = ({ data, pinUrl, handleClick }) => {
   return (
     <tbody className="bg-white divide-y divide-gray-200 mb-px">
       {data.map(rowData => (
@@ -34,6 +34,7 @@ const TableRow = ({ data, pinUrl }) => {
               className="underline hover:text-gray-700 cursor-pointer"
               target="_blank"
               rel="noreferrer"
+              onClick={() => handleClick(rowData.short_url)}
             >
               {rowData.short_url}
             </a>
