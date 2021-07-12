@@ -1,4 +1,5 @@
 class Url < ApplicationRecord
+  default_scope { order(is_pinned: :desc, created_at: :desc) }
   validates :long_url,
             presence: true,
             uniqueness: true,
