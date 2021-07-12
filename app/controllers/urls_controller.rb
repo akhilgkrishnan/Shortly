@@ -9,11 +9,11 @@ class UrlsController < ApplicationController
   def create
     url = Url.new(url_params)
     url.short_url = shorten_url(slug: url.slug)
-    if url.save!
-      render status: :ok, json: { url: url }
+    if url.save
+      render status: :ok, json: { notice: t('successfully_shortened') }
     else
-      errors = url.errors.full_messages
-      render status: :unprocessable_entity, json: { errors: errors }
+      render status: :unprocessable_entity,
+             json: { errors: url.errors.full_messages }
     end
   end
 

@@ -5,10 +5,25 @@ import ListUrls from "components/Urls/ListUrls";
 import PageLoader from "components/PageLoader";
 import NavBar from "components/NavBar";
 import urlsApi from "apis/urls";
+import CreateUrl from "components/Urls/CreateUrl";
 
 const Dashboard = ({ history }) => {
   const [urls, setUrls] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [url, setUrl] = useState("");
+
+  const handleSubmit = async event => {
+    event.preventDefault();
+    setLoading(true);
+    try {
+      await urlsApi.create({ url: { long_url: url } });
+      fetchUrls();
+      setLoading(false);
+    } catch (error) {
+      logger.error(error);
+      setLoading(false);
+    }
+  };
 
   const fetchUrls = async () => {
     try {
@@ -37,6 +52,14 @@ const Dashboard = ({ history }) => {
     return (
       <>
         <NavBar />
+        <Container>
+          <CreateUrl
+            url={url}
+            setUrl={setUrl}
+            loading={loading}
+            handleSubmit={handleSubmit}
+          />
+        </Container>
         <Container>
           <ListUrls data={urls} />
         </Container>

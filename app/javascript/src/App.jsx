@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
 import { initializeLogger } from "common/logger";
-import { setAuthHeaders } from "apis/axios";
+import { registerIntercepts, setAuthHeaders } from "apis/axios";
 import Dashboard from "components/Dashboard";
 import PageLoader from "components/PageLoader";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     initializeLogger();
+    registerIntercepts();
     setAuthHeaders(setLoading);
   }, []);
 
@@ -23,6 +25,7 @@ const App = () => {
 
   return (
     <Router>
+      <ToastContainer />
       <Switch>
         <Route exact path="/" component={Dashboard} />
       </Switch>
