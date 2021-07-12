@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import { isNil, isEmpty, either } from "ramda";
 import Container from "components/Container";
 import ListUrls from "components/Urls/ListUrls";
@@ -7,10 +7,14 @@ import NavBar from "components/NavBar";
 import urlsApi from "apis/urls";
 import CreateUrl from "components/Urls/CreateUrl";
 
+export const UrlsDataContext = createContext();
+export const ButtonLoaderContext = createContext();
+
 const Dashboard = ({ history }) => {
   const [urls, setUrls] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [url, setUrl] = useState("");
+  const [pageLoading, setPageLoading] = useState(true);
 
   const handleSubmit = async event => {
     event.preventDefault();
@@ -53,10 +57,10 @@ const Dashboard = ({ history }) => {
     try {
       const response = await urlsApi.list();
       setUrls(response.data.urls);
-      setLoading(false);
+      setPageLoading(false);
     } catch (error) {
       logger.error(error);
-      setLoading(false);
+      setPageLoading(false);
     }
   };
 
@@ -64,7 +68,7 @@ const Dashboard = ({ history }) => {
     fetchUrls();
   }, []);
 
-  if (loading) {
+  if (pageLoading) {
     return (
       <div className="w-screen h-screen">
         <PageLoader />
@@ -77,15 +81,19 @@ const Dashboard = ({ history }) => {
       <>
         <NavBar />
         <Container>
-          <CreateUrl
-            url={url}
-            setUrl={setUrl}
-            loading={loading}
-            handleSubmit={handleSubmit}
-          />
+          <ButtonLoaderContext.Provider value={loading}>
+            <CreateUrl
+              url={url}
+              setUrl={setUrl}
+              loading={loading}
+              handleSubmit={handleSubmit}
+            />
+          </ButtonLoaderContext.Provider>
         </Container>
         <Container>
-          <ListUrls data={urls} pinUrl={pinUrl} handleClick={handleClick} />
+          <UrlsDataContext.Provider value={urls}>
+            <ListUrls data={urls} pinUrl={pinUrl} handleClick={handleClick} />
+          </UrlsDataContext.Provider>
         </Container>
       </>
     );

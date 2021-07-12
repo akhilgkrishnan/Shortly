@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import PropTypes from "prop-types";
+import { UrlsDataContext } from "components/Dashboard";
 
-const TableRow = ({ data, pinUrl, handleClick }) => {
+const TableRow = ({ pinUrl, handleClick }) => {
+  const data = useContext(UrlsDataContext);
   return (
     <tbody className="bg-white divide-y divide-gray-200 mb-px">
       {data.map(rowData => (
         <tr key={rowData.id}>
           <td className="px-1 py-4 text-2xl font-medium text-center leading-5 text-bb-gray whitespace-no-wrap bg-gray-100">
             <i
-              className={`text-gray-600 p-4 bg-gray-100 hover:text-purple-400 ${
+              className={`text-gray-600 p-4 bg-gray-100 hover:text-purple-400 cursor-pointer ${
                 rowData.is_pinned
                   ? "ri-pushpin-2-fill text-purple-400"
                   : "ri-pushpin-2-fill"

@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import Input from "components/Input";
 import Button from "components/Button";
+import { ButtonLoaderContext } from "components/Dashboard";
 
 const UrlForm = ({ link, setUrl, loading, handleSubmit }) => {
+  const buttonLoading = useContext(ButtonLoaderContext);
   return (
     <>
       <div className="flex-grow">
@@ -17,7 +19,11 @@ const UrlForm = ({ link, setUrl, loading, handleSubmit }) => {
             onChange={e => setUrl(e.target.value)}
           />
           <div>
-            <Button type="submit" buttonText="Shorten!" loading={loading} />
+            <Button
+              type="submit"
+              buttonText="Shorten!"
+              loading={buttonLoading}
+            />
           </div>
         </form>
       </div>
