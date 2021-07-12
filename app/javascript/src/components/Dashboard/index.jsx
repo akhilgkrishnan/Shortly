@@ -103,6 +103,16 @@ const Dashboard = ({ history }) => {
     <>
       <NavBar />
       <Container>
+        <ButtonLoaderContext.Provider value={loading}>
+          <CreateUrl
+            url={url}
+            setUrl={setUrl}
+            loading={loading}
+            handleSubmit={handleSubmit}
+          />
+        </ButtonLoaderContext.Provider>
+      </Container>
+      <Container>
         <h1 className="text-xl leading-5 text-center">
           There is no urls shortened 😔
         </h1>
