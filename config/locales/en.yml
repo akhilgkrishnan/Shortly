@@ -2,3 +2,4 @@ en:
   hello: "Hello world"
   successfully_shortened: "URL Successfully Shortened"
   already_shortened: "URL Already Shortened"
+  successfully_pinned: "URL Successfully Pinned"

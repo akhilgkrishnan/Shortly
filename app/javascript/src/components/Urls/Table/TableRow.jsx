@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const TableRow = ({ data }) => {
+const TableRow = ({ data, pinUrl }) => {
   return (
     <tbody className="bg-white divide-y divide-gray-200 mb-px">
       {data.map(rowData => (
@@ -13,6 +13,7 @@ const TableRow = ({ data }) => {
                   ? "ri-pushpin-2-fill text-purple-400"
                   : "ri-pushpin-2-fill"
               }`}
+              onClick={() => pinUrl(rowData.slug, rowData.is_pinned)}
             ></i>
           </td>
           <td className="p-4 text-md break-all text-bb-gray">

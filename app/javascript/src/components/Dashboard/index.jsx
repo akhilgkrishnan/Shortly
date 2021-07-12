@@ -25,6 +25,19 @@ const Dashboard = ({ history }) => {
     }
   };
 
+  const pinUrl = async (slug, status) => {
+    try {
+      const toggledStatus = !status;
+      await urlsApi.update({
+        slug,
+        payload: { url: { is_pinned: toggledStatus } },
+      });
+      await fetchUrls();
+    } catch (error) {
+      logger.error(error);
+    }
+  };
+
   const fetchUrls = async () => {
     try {
       const response = await urlsApi.list();
@@ -61,7 +74,7 @@ const Dashboard = ({ history }) => {
           />
         </Container>
         <Container>
-          <ListUrls data={urls} />
+          <ListUrls data={urls} pinUrl={pinUrl} />
         </Container>
       </>
     );
