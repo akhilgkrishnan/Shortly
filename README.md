@@ -1,24 +1,3 @@
-# README
+# Citly
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+[![CircleCI](https://circleci.com/gh/AkhilGKrishnan/citly.svg?style=svg&circle-token=3596962964115173d203d511513ad31e648191ee)](https://circleci.com/gh/AkhilGKrishnan/citly/tree/main)
