@@ -20,7 +20,6 @@ AllCops:
     - ".husky/**/*"
     - ".bundle/**/*"
     - ".circleci/**/*"
-    - ".semaphore/**/*"
     - "**/log/**/*"
     - "**/public/**/*"
     - "**/tmp/**/*"
