@@ -4,6 +4,7 @@ import Container from "components/Container";
 import ListUrls from "components/Urls/ListUrls";
 import PageLoader from "components/PageLoader";
 import NavBar from "components/NavBar";
+import Footer from "components/Footer";
 import urlsApi from "apis/urls";
 import CreateUrl from "components/Urls/CreateUrl";
 
@@ -16,7 +17,7 @@ const Dashboard = ({ history }) => {
   const [url, setUrl] = useState("");
   const [pageLoading, setPageLoading] = useState(true);
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
     try {
@@ -42,7 +43,7 @@ const Dashboard = ({ history }) => {
     }
   };
 
-  const handleClick = link => {
+  const handleClick = (link) => {
     try {
       setTimeout(() => {
         fetchUrls();
@@ -101,6 +102,7 @@ const Dashboard = ({ history }) => {
 
   return (
     <>
+      <Footer />
       <NavBar />
       <Container>
         <ButtonLoaderContext.Provider value={loading}>
