@@ -4,18 +4,18 @@ import { toast, Slide } from "react-toastify";
 const ToastrComponent = ({ type, message }) => {
   let icon;
   switch (type) {
-  case "success":
-    icon = "ri-checkbox-circle-fill";
-    break;
-  case "error":
-    icon = "ri-alert-fill";
-    break;
-  case "info":
-    icon = "ri-information-fill";
-    break;
-  default:
-    icon = "ri-information-fill";
-    break;
+    case "success":
+      icon = "ri-checkbox-circle-fill";
+      break;
+    case "error":
+      icon = "ri-alert-fill";
+      break;
+    case "info":
+      icon = "ri-information-fill";
+      break;
+    default:
+      icon = "ri-information-fill";
+      break;
   }
 
   return (
@@ -26,16 +26,16 @@ const ToastrComponent = ({ type, message }) => {
   );
 };
 
-const showToastr = message => {
+const showToastr = (message) => {
   toast.success(<ToastrComponent type="success" message={message} />, {
     position: toast.POSITION.TOP_RIGHT,
     transition: Slide,
   });
 };
 
-const isError = e => e && e.stack && e.message;
+const isError = (e) => e && e.stack && e.message;
 
-const showErrorToastr = error => {
+const showErrorToastr = (error) => {
   const errorMessage = isError(error) ? error.message : error;
   toast.error(<ToastrComponent type="error" message={errorMessage} />, {
     position: toast.POSITION.TOP_RIGHT,

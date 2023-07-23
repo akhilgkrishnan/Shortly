@@ -102,7 +102,6 @@ const Dashboard = ({ history }) => {
 
   return (
     <>
-      <Footer />
       <NavBar />
       <Container>
         <ButtonLoaderContext.Provider value={loading}>
@@ -119,6 +118,8 @@ const Dashboard = ({ history }) => {
           There is no urls shortened 😔
         </h1>
       </Container>
+
+      <Footer />
     </>
   );
 };
