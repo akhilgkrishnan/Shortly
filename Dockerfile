@@ -41,7 +41,7 @@ RUN bundle install && \
 
 # Install node dependencies
 COPY package.json yarn.lock ./
-RUN yarn install --check-files
+RUN yarn install --check-files --production=false --ignore-scripts
 
 # Copy application source
 COPY . .

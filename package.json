@@ -55,7 +55,7 @@
     ]
   },
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "test -d .git && husky install || exit 0",
     "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --config config/webpack/production.js",
     "build:dev": "NODE_OPTIONS=--openssl-legacy-provider webpack --config config/webpack/development.js"
   }
