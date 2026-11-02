@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM ruby:3.2-slim AS base
+FROM docker.io/library/ruby:3.2-slim AS base
 
 WORKDIR /rails
 
@@ -46,8 +46,8 @@ RUN yarn install --check-files
 # Copy application source
 COPY . .
 
-# Precompile assets (Webpack + Tailwind CSS + DaisyUI)
-RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile
+# Precompile assets (Webpack + Tailwind CSS)
+RUN SECRET_KEY_BASE=dummy_key_for_precompile_assets bundle exec rails assets:precompile
 
 # Final runtime image
 FROM base
