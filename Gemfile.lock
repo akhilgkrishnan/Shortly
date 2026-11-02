@@ -108,7 +108,7 @@ GEM
       logger
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
-    logger (1.7.0)
+    logger (1.5.3)
     loofah (2.25.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.19.5)
@@ -289,6 +289,7 @@ DEPENDENCIES
   jbuilder (~> 2.7)
   json (~> 2.7)
   listen (~> 3.3)
+  logger (= 1.5.3)
   minitest (~> 5.15)
   pg
   puma (~> 5.0)

@@ -26,6 +26,7 @@ gem "json", "~> 2.7"
 # gem 'image_processing', '~> 1.2'
 
 gem "rexml", "~> 3.2", ">= 3.2.4"
+gem "logger", "1.5.3"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.4.4", require: false

@@ -1,7 +1,13 @@
 #!/bin/bash
 set -e
 
-# Remove a potentially pre-existing server.pid for Rails.
+# Auto-generate SECRET_KEY_BASE if not provided in environment
+if [ -z "$SECRET_KEY_BASE" ]; then
+  export SECRET_KEY_BASE="shortly_prod_secret_$(cat /dev/urandom | tr -dc 'a-f0-9' | fold -w 64 | head -n 1)"
+fi
+
+# Ensure runtime directories exist
+mkdir -p /rails/tmp/pids /rails/tmp/cache /rails/tmp/sockets /rails/log /rails/storage /rails/db
 rm -f /rails/tmp/pids/server.pid
 
 # Run migrations automatically in production
