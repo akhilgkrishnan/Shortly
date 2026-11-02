@@ -3,3 +3,5 @@ en:
   successfully_shortened: "URL Successfully Shortened"
   already_shortened: "URL Already Shortened"
   successfully_pinned: "URL Successfully Pinned"
+  successfully_deleted: "URL Successfully Deleted"
+  not_found: "URL not found"

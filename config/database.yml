@@ -22,4 +22,10 @@ test:
 
 production:
   <<: *default
+  <% if ENV["DATABASE_URL"].present? %>
+  adapter: postgresql
+  encoding: unicode
+  url: <%= ENV["DATABASE_URL"] %>
+  <% else %>
   database: db/production.sqlite3
+  <% end %>

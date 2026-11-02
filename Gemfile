@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.0.1"
+ruby ">= 3.0.0"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem "rails", "~> 6.1.4"
@@ -16,6 +16,7 @@ gem "sass-rails", ">= 6"
 gem "webpacker", "~> 5.0"
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "jbuilder", "~> 2.7"
+gem "json", "~> 2.7"
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use Active Model has_secure_password
@@ -55,6 +56,7 @@ group :development do
 end
 
 group :test do
+  gem "minitest", "~> 5.15"
   # Adds support for Capybara system testing and selenium driver
   gem "capybara", ">= 3.26"
   gem "selenium-webdriver"

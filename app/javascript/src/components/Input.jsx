@@ -16,10 +16,7 @@ const Input = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="bg-white border-2 border-white
-                  rounded-l appearance-none w-full
-                  py-2 px-4 text-gray-700 leading-tight
-                  focus:outline-none focus:border-purple-500"
+        className="w-full pl-10 pr-4 py-3 bg-white border border-gray-300 hover:border-gray-400 rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-600 text-sm transition-all shadow-xs"
       />
     </div>
   );

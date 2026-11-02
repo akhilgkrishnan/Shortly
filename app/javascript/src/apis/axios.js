@@ -31,13 +31,20 @@ const handleSuccessResponse = response => {
 };
 
 const handleErrorResponse = error => {
-  Toastr.error(
-    error.response?.data?.errors ||
-      error.response?.data?.notice ||
-      error.message ||
-      error.notice ||
-      "Something went wrong!"
-  );
+  let errorMessage = "Something went wrong!";
+  const errorData = error.response?.data?.errors;
+
+  if (errorData) {
+    errorMessage = Array.isArray(errorData) ? errorData.join(", ") : String(errorData);
+  } else if (error.response?.data?.notice) {
+    errorMessage = error.response.data.notice;
+  } else if (error.message) {
+    errorMessage = error.message;
+  } else if (error.notice) {
+    errorMessage = error.notice;
+  }
+
+  Toastr.error(errorMessage);
   if (error.response?.status === 423) {
     window.location.href = "/";
   }

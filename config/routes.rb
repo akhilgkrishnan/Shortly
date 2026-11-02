@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  resources :urls, only: %i[index create update], param: :slug
+  resources :urls, only: %i[index create update destroy], param: :slug
   get "/:slug", to: "urls#show"
 
   root "home#index"

@@ -16,7 +16,7 @@ default: &default
   cache_manifest: false
 
   # Extract and emit a css file
-  extract_css: false
+  extract_css: true
 
   static_assets_extensions:
     - .jpg
@@ -50,7 +50,8 @@ default: &default
 
 development:
   <<: *default
-  compile: true
+  compile: false
+  extract_css: true
 
   # Reference: https://webpack.js.org/configuration/dev-server/
   dev_server:
