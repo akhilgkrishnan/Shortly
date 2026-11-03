@@ -3,8 +3,8 @@ services:
     image: postgres:15-alpine
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: shortly_development
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: shortly_production
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -13,13 +13,14 @@ services:
   web:
     build: .
     command: bin/rails server -b 0.0.0.0 -p 3000
-    volumes:
-      - .:/rails
     ports:
       - "3000:3000"
     environment:
-      RAILS_ENV: development
-      DATABASE_URL: postgres://postgres:password@db:5432/shortly_development
+      RAILS_ENV: production
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD:-password}@db:5432/shortly_production
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE:-shortly_dev_compose_secret_key_base_1234567890abcdef}
+      RAILS_SERVE_STATIC_FILES: "true"
+      RAILS_LOG_TO_STDOUT: "true"
     depends_on:
       - db
 

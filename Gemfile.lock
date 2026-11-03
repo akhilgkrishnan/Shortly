@@ -91,6 +91,7 @@ GEM
     erubi (1.13.1)
     execjs (2.10.2)
       json (>= 2)
+    ffi (1.17.4-aarch64-linux-gnu)
     ffi (1.17.4-x86_64-darwin)
     ffi (1.17.4-x86_64-linux-gnu)
     globalid (1.4.0)
@@ -122,6 +123,7 @@ GEM
     matrix (0.4.3)
     method_source (1.1.0)
     mini_mime (1.1.5)
+    mini_portile2 (2.8.9)
     minitest (5.27.0)
     msgpack (1.8.7)
     net-imap (0.6.8)
@@ -134,6 +136,8 @@ GEM
     net-smtp (0.5.2)
       net-protocol
     nio4r (2.7.5)
+    nokogiri (1.19.6-aarch64-linux-gnu)
+      racc (~> 1.4)
     nokogiri (1.19.6-x86_64-darwin)
       racc (~> 1.4)
     nokogiri (1.19.6-x86_64-linux-gnu)
@@ -142,6 +146,7 @@ GEM
     parser (3.3.13.0)
       ast (~> 2.4.1)
       racc
+    pg (1.7.0-aarch64-linux)
     pg (1.7.0-x86_64-darwin)
     pg (1.7.0-x86_64-linux)
     prism (1.9.0)
@@ -245,8 +250,8 @@ GEM
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
-    sqlite3 (1.7.3-x86_64-darwin)
-    sqlite3 (1.7.3-x86_64-linux)
+    sqlite3 (1.7.3)
+      mini_portile2 (~> 2.8.0)
     thor (1.5.0)
     tilt (2.9.0)
     timeout (0.6.1)
@@ -278,6 +283,7 @@ GEM
     zeitwerk (2.8.3)
 
 PLATFORMS
+  aarch64-linux
   x86_64-darwin-20
   x86_64-darwin-22
   x86_64-linux

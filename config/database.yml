@@ -11,7 +11,13 @@ default: &default
 
 development:
   <<: *default
+  <% if ENV["DATABASE_URL"].present? %>
+  adapter: postgresql
+  encoding: unicode
+  url: <%= ENV["DATABASE_URL"] %>
+  <% else %>
   database: db/development.sqlite3
+  <% end %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -27,5 +33,5 @@ production:
   encoding: unicode
   url: <%= ENV["DATABASE_URL"] %>
   <% else %>
-  database: db/production.sqlite3
+  database: <%= ENV.fetch("SQLITE_DATABASE_PATH", "storage/production.sqlite3") %>
   <% end %>

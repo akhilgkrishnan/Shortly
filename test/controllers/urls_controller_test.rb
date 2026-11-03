@@ -97,4 +97,43 @@ class UrlsControllerTest < ActionDispatch::IntegrationTest
     end
     assert_response :forbidden
   end
+
+  test "index serializes safe fields and owned flag without leaking visitor_token" do
+    url1 = Url.create!(
+      long_url: "https://facebook.com", short_url: "https://sample.com/test1", slug: "test1",
+      visitor_token: @visitor_token)
+    url2 = Url.create!(
+      long_url: "https://google.com", short_url: "https://sample.com/test2", slug: "test2",
+      visitor_token: "other_visitor")
+
+    get urls_url, params: { scope: "all" }, headers: @headers
+    assert_response :success
+
+    urls = response.parsed_body["urls"]
+    assert_equal 2, urls.length
+    assert_nil response.parsed_body["visitor_token"]
+
+    urls.each do |u|
+      assert_nil u["visitor_token"]
+      assert u.key?("owned")
+    end
+
+    my_link = urls.find { |u| u["slug"] == url1.slug }
+    other_link = urls.find { |u| u["slug"] == url2.slug }
+    assert_equal true, my_link["owned"]
+    assert_equal false, other_link["owned"]
+  end
+
+  test "create rejects javascript or invalid schemes" do
+    post urls_url, params: { url: { long_url: "javascript:alert(1)//http://foo.bar" } }, headers: @headers
+    assert_response :unprocessable_entity
+    assert_includes response.parsed_body["errors"].join(" "), "valid HTTP or HTTPS URL"
+  end
+
+  test "visitor token is read from encrypted cookie when headers not provided" do
+    cookies.encrypted[:visitor_token] = "cookie_visitor_456"
+    post urls_url, params: { url: { long_url: "https://rubyonrails.org" } }
+    assert_response :success
+    assert_equal "cookie_visitor_456", Url.last.visitor_token
+  end
 end

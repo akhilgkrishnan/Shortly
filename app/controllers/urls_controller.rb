@@ -1,15 +1,18 @@
 # frozen_string_literal: true
 
 class UrlsController < ApplicationController
-  skip_before_action :verify_authenticity_token
   before_action :load_url, only: %i[update show destroy]
+
+  RESERVED_SLUGS = %w[urls packs assets rails favicon.ico robots.txt].freeze
+
   def index
+    token = current_visitor_token
     urls = if params[:scope] == "all"
-      Url.all
+             Url.all
            else
-             Url.where(visitor_token: current_visitor_token)
-    end
-    render json: { urls: urls, visitor_token: current_visitor_token }, status: :ok
+             Url.where(visitor_token: token)
+           end
+    render json: { urls: urls.map { |url| serialize_url(url, token) } }, status: :ok
   end
 
   def show
@@ -19,13 +22,12 @@ class UrlsController < ApplicationController
         value: "1",
         expires: 24.hours.from_now,
         httponly: true,
-        same_site: :lax
+        same_site: :lax,
+        secure: Rails.env.production?
       }
-      Url.where(id: @url.id).update_all(
-        "click_count = COALESCE(click_count, 0) + 1, unique_clicks = COALESCE(unique_clicks, 0) + 1"
-      )
+      Url.update_counters(@url.id, click_count: 1, unique_clicks: 1)
     else
-      Url.where(id: @url.id).update_all("click_count = COALESCE(click_count, 0) + 1")
+      Url.update_counters(@url.id, click_count: 1)
     end
 
     redirect_to @url.long_url, allow_other_host: true
@@ -36,19 +38,19 @@ class UrlsController < ApplicationController
     url.visitor_token = current_visitor_token
     url.short_url = shorten_url(slug: url.slug)
     if url.save
-      render status: :ok, json: { notice: t("successfully_shortened"), url: url }
+      render status: :ok, json: { notice: t("successfully_shortened"), url: serialize_url(url, current_visitor_token) }
     else
       render status: :unprocessable_entity,
-        json: { errors: url.errors.full_messages }
+             json: { errors: url.errors.full_messages }
     end
   rescue ActionController::ParameterMissing => e
     render status: :unprocessable_entity,
-      json: { errors: [e.message] }
+           json: { errors: [e.message] }
   rescue StandardError => e
     logger.error "#{e.class}: #{e.message}"
     logger.error e.backtrace.join("\n")
     render status: :internal_server_error,
-      json: { errors: ["An unexpected error occurred: #{e.message}"] }
+           json: { errors: ["An unexpected error occurred: #{e.message}"] }
   end
 
   def update
@@ -56,11 +58,12 @@ class UrlsController < ApplicationController
       return render status: :forbidden, json: { errors: ["You are not authorized to modify this link."] }
     end
 
-    if @url.update(is_pinned: params[:url][:is_pinned])
+    pinned_param = params.require(:url).permit(:is_pinned)[:is_pinned]
+    if @url.update(is_pinned: pinned_param)
       render status: :ok, json: { notice: t("successfully_pinned") }
     else
       render status: :unprocessable_entity,
-        json: { errors: @url.errors.full_messages }
+             json: { errors: @url.errors.full_messages }
     end
   end
 
@@ -73,7 +76,7 @@ class UrlsController < ApplicationController
       render status: :ok, json: { notice: t("successfully_deleted") }
     else
       render status: :unprocessable_entity,
-        json: { errors: @url.errors.full_messages }
+             json: { errors: @url.errors.full_messages }
     end
   end
 
@@ -96,7 +99,22 @@ class UrlsController < ApplicationController
     def slug
       loop do
         random_slug = SecureRandom.alphanumeric(8)
-        return random_slug unless Url.exists?(slug: random_slug)
+        return random_slug unless RESERVED_SLUGS.include?(random_slug.downcase) || Url.exists?(slug: random_slug)
       end
+    end
+
+    def serialize_url(url, token = current_visitor_token)
+      {
+        id: url.id,
+        slug: url.slug,
+        short_url: url.short_url,
+        long_url: url.long_url,
+        is_pinned: url.is_pinned,
+        click_count: url.click_count || 0,
+        unique_clicks: url.unique_clicks || 0,
+        created_at: url.created_at,
+        updated_at: url.updated_at,
+        owned: (url.visitor_token.present? && url.visitor_token == token)
+      }
     end
 end

@@ -9,18 +9,20 @@ class Url < ApplicationRecord
   validates :visitor_token, presence: true
   validates :long_url,
     presence: true,
-    uniqueness: { scope: :visitor_token, message: "has already been shortened by you" },
-    format: URI::DEFAULT_PARSER.make_regexp(%w[http https])
+    uniqueness: { scope: :visitor_token, message: "has already been shortened by you" }
+  validate :validate_long_url_format
+
   validates :short_url,
     presence: true,
-    uniqueness: true,
-    format: URI::DEFAULT_PARSER.make_regexp(%w[http https])
+    uniqueness: true
+  validate :validate_short_url_format
+
   validates :slug, uniqueness: true
 
   private
 
     def assign_default_visitor_token
-      self.visitor_token = visitor_token.presence || "anonymous"
+      self.visitor_token = visitor_token.presence || SecureRandom.uuid
     end
 
     def sanitize_url
@@ -29,6 +31,30 @@ class Url < ApplicationRecord
       self.long_url = long_url.strip
       unless long_url.match?(%r{\Ahttps?://}i)
         self.long_url = "https://#{long_url}"
+      end
+    end
+
+    def validate_long_url_format
+      return if long_url.blank?
+
+      unless long_url.match?(%r{\Ahttps?://[^\s/$.?#].[^\s]*\z}i)
+        errors.add(:long_url, "is not a valid HTTP or HTTPS URL")
+        return
+      end
+
+      uri = URI.parse(long_url)
+      unless uri.is_a?(URI::HTTP) && uri.host.present? && !uri.host.include?(" ")
+        errors.add(:long_url, "is not a valid HTTP or HTTPS URL")
+      end
+    rescue URI::InvalidURIError
+      errors.add(:long_url, "is not a valid URL")
+    end
+
+    def validate_short_url_format
+      return if short_url.blank?
+
+      unless short_url.match?(%r{\Ahttps?://[^\s/$.?#].[^\s]*\z}i)
+        errors.add(:short_url, "is not a valid HTTP or HTTPS URL")
       end
     end
 end

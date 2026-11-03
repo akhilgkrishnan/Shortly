@@ -3,6 +3,9 @@ set -e
 
 # Auto-generate SECRET_KEY_BASE if not provided in environment
 if [ -z "$SECRET_KEY_BASE" ]; then
+  if [ "$RAILS_ENV" = "production" ]; then
+    echo "WARNING: SECRET_KEY_BASE is not set in environment. Generating an ephemeral secret key for this container." >&2
+  fi
   export SECRET_KEY_BASE="shortly_prod_secret_$(cat /dev/urandom | tr -dc 'a-f0-9' | fold -w 64 | head -n 1)"
 fi
 
@@ -10,9 +13,9 @@ fi
 mkdir -p /rails/tmp/pids /rails/tmp/cache /rails/tmp/sockets /rails/log /rails/storage /rails/db
 rm -f /rails/tmp/pids/server.pid
 
-# Run migrations automatically in production
+# Run migrations automatically in production and fail fast on migration errors
 if [ "$1" = "bin/rails" ] && [ "$2" = "server" ]; then
-  bundle exec rails db:prepare || true
+  bundle exec rails db:prepare
 fi
 
 # Then exec the container's main process (what's set as CMD in the Dockerfile).

@@ -5,13 +5,15 @@ primary_region = "iad"
 [build]
   dockerfile = "Dockerfile"
 
-[deploy]
-  release_command = "bin/rails db:migrate"
-
 [env]
   RAILS_ENV = "production"
   RAILS_LOG_TO_STDOUT = "true"
   RAILS_SERVE_STATIC_FILES = "true"
+  SQLITE_DATABASE_PATH = "/rails/storage/production.sqlite3"
+
+[mounts]
+  source = "shortly_data"
+  destination = "/rails/storage"
 
 [http_service]
   internal_port = 3000

@@ -26,13 +26,15 @@ const TableRow = ({ pinUrl, handleClick, deleteUrl }) => {
 
   const ensureHttp = (rawUrl) => {
     if (!rawUrl) return "#";
-    return /^https?:\/\//i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
+    if (/^https?:\/\//i.test(rawUrl)) return rawUrl;
+    if (/^(javascript|data|vbscript|file):/i.test(rawUrl)) return "#";
+    return `https://${rawUrl}`;
   };
 
   return (
     <>
       <tbody className="bg-white divide-y divide-gray-100 text-sm">
-        {data.map(rowData => (
+        {data.map((rowData) => (
           <tr
             key={rowData.id}
             className={`hover:bg-purple-50/30 transition-colors ${
@@ -41,18 +43,33 @@ const TableRow = ({ pinUrl, handleClick, deleteUrl }) => {
           >
             {/* Pin Column */}
             <td className="w-14 px-3 py-4 text-center whitespace-nowrap">
-              <button
-                type="button"
-                title={rowData.is_pinned ? "Unpin URL" : "Pin URL to top"}
-                className={`w-8 h-8 inline-flex items-center justify-center rounded-lg transition-all cursor-pointer ${
-                  rowData.is_pinned
-                    ? "text-purple-600 bg-purple-100 hover:bg-purple-200 shadow-xs"
-                    : "text-gray-500 hover:text-purple-600 hover:bg-gray-100"
-                }`}
-                onClick={() => pinUrl(rowData.slug, rowData.is_pinned)}
-              >
-                <i className={`${rowData.is_pinned ? "ri-pushpin-2-fill text-purple-600" : "ri-pushpin-2-line text-gray-400"} text-base leading-none`}></i>
-              </button>
+              {rowData.owned !== false ? (
+                <button
+                  type="button"
+                  title={rowData.is_pinned ? "Unpin URL" : "Pin URL to top"}
+                  className={`w-8 h-8 inline-flex items-center justify-center rounded-lg transition-all cursor-pointer ${
+                    rowData.is_pinned
+                      ? "text-purple-600 bg-purple-100 hover:bg-purple-200 shadow-xs"
+                      : "text-gray-500 hover:text-purple-600 hover:bg-gray-100"
+                  }`}
+                  onClick={() => pinUrl(rowData.slug, rowData.is_pinned)}
+                >
+                  <i
+                    className={`${
+                      rowData.is_pinned
+                        ? "ri-pushpin-2-fill text-purple-600"
+                        : "ri-pushpin-2-line text-gray-400"
+                    } text-base leading-none`}
+                  ></i>
+                </button>
+              ) : rowData.is_pinned ? (
+                <span
+                  title="Pinned by owner"
+                  className="w-8 h-8 inline-flex items-center justify-center text-purple-500 cursor-default"
+                >
+                  <i className="ri-pushpin-2-fill text-base leading-none"></i>
+                </span>
+              ) : null}
             </td>
 
             {/* Original URL Column */}
@@ -91,12 +108,18 @@ const TableRow = ({ pinUrl, handleClick, deleteUrl }) => {
             {/* Clicks Badge Column */}
             <td className="w-32 px-3 py-4 text-center whitespace-nowrap">
               <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-gray-100 text-gray-800 border border-gray-300">
-                <span title="Total Clicks" className="inline-flex items-center space-x-1">
+                <span
+                  title="Total Clicks"
+                  className="inline-flex items-center space-x-1"
+                >
                   <i className="ri-bar-chart-2-line text-xs text-purple-600"></i>
                   <span>{rowData.click_count || 0}</span>
                 </span>
                 <span className="text-gray-400 font-normal">|</span>
-                <span title="Unique Visitors" className="inline-flex items-center space-x-1 text-blue-700">
+                <span
+                  title="Unique Visitors"
+                  className="inline-flex items-center space-x-1 text-blue-700"
+                >
                   <i className="ri-user-smile-line text-xs text-blue-600"></i>
                   <span>{rowData.unique_clicks || 0}</span>
                 </span>
@@ -109,7 +132,7 @@ const TableRow = ({ pinUrl, handleClick, deleteUrl }) => {
                 <button
                   type="button"
                   title="Copy short link"
-                  onClick={e => handleCopy(e, rowData.short_url, rowData.id)}
+                  onClick={(e) => handleCopy(e, rowData.short_url, rowData.id)}
                   className={`w-8 h-8 inline-flex items-center justify-center rounded-lg border transition-all cursor-pointer ${
                     copiedId === rowData.id
                       ? "bg-green-50 border-green-300 text-green-700 shadow-xs"
@@ -134,14 +157,16 @@ const TableRow = ({ pinUrl, handleClick, deleteUrl }) => {
                 >
                   <i className="ri-qr-code-line text-base"></i>
                 </button>
-                <button
-                  type="button"
-                  title="Delete link"
-                  onClick={e => handleDelete(e, rowData.slug)}
-                  className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 hover:text-red-700 hover:border-red-300 hover:bg-red-50 transition-all cursor-pointer"
-                >
-                  <i className="ri-delete-bin-line text-base"></i>
-                </button>
+                {rowData.owned !== false && (
+                  <button
+                    type="button"
+                    title="Delete link"
+                    onClick={(e) => handleDelete(e, rowData.slug)}
+                    className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 hover:text-red-700 hover:border-red-300 hover:bg-red-50 transition-all cursor-pointer"
+                  >
+                    <i className="ri-delete-bin-line text-base"></i>
+                  </button>
+                )}
               </div>
             </td>
           </tr>

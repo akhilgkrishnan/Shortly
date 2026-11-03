@@ -1,20 +1,35 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
+  protect_from_forgery with: :exception
   helper_method :current_visitor_token
 
   def current_visitor_token
-    header_token = request.headers["X-Visitor-Token"].presence
-    return header_token if header_token
+    # Allow test suite to supply visitor identity via header in test environment only
+    if Rails.env.test? && request.headers["X-Visitor-Token"].present?
+      return request.headers["X-Visitor-Token"]
+    end
 
-    token = cookies[:visitor_token]
-    return token if token.present?
+    token = cookies.encrypted[:visitor_token].presence || cookies[:visitor_token].presence
+    if token.present?
+      # Upgrade cookie to encrypted if it was plain
+      if cookies.encrypted[:visitor_token].blank?
+        cookies.permanent.encrypted[:visitor_token] = {
+          value: token,
+          httponly: true,
+          same_site: :lax,
+          secure: Rails.env.production?
+        }
+      end
+      return token
+    end
 
     new_token = SecureRandom.uuid
-    cookies.permanent[:visitor_token] = {
+    cookies.permanent.encrypted[:visitor_token] = {
       value: new_token,
       httponly: true,
-      same_site: :lax
+      same_site: :lax,
+      secure: Rails.env.production?
     }
     new_token
   end
