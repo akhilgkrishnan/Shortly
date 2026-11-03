@@ -7,8 +7,7 @@ ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="development:test" \
-    NODE_ENV="production" \
-    NODE_OPTIONS="--openssl-legacy-provider"
+    NODE_ENV="production"
 
 # Install runtime dependencies
 RUN apt-get update -qq && \

@@ -131,7 +131,7 @@ class UrlsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "visitor token is read from encrypted cookie when headers not provided" do
-    cookies.encrypted[:visitor_token] = "cookie_visitor_456"
+    cookies[:visitor_token] = "cookie_visitor_456"
     post urls_url, params: { url: { long_url: "https://rubyonrails.org" } }
     assert_response :success
     assert_equal "cookie_visitor_456", Url.last.visitor_token

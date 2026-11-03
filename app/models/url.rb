@@ -22,7 +22,7 @@ class Url < ApplicationRecord
   private
 
     def assign_default_visitor_token
-      self.visitor_token = visitor_token.presence || SecureRandom.uuid
+      self.visitor_token = visitor_token.presence || "default_visitor"
     end
 
     def sanitize_url
@@ -47,7 +47,7 @@ class Url < ApplicationRecord
         errors.add(:long_url, "is not a valid HTTP or HTTPS URL")
       end
     rescue URI::InvalidURIError
-      errors.add(:long_url, "is not a valid URL")
+      errors.add(:long_url, "is not a valid HTTP or HTTPS URL")
     end
 
     def validate_short_url_format

@@ -10,16 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_11_02_213000) do
-
+ActiveRecord::Schema[7.2].define(version: 2026_11_02_213000) do
   create_table "urls", force: :cascade do |t|
     t.string "long_url", null: false
     t.string "short_url"
     t.integer "click_count", default: 0
     t.boolean "is_pinned", default: false
     t.string "slug", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "visitor_token"
     t.integer "unique_clicks", default: 0, null: false
     t.index ["short_url"], name: "index_urls_on_short_url"
@@ -27,5 +26,4 @@ ActiveRecord::Schema.define(version: 2026_11_02_213000) do
     t.index ["visitor_token", "is_pinned", "created_at"], name: "index_urls_on_visitor_and_sorting"
     t.index ["visitor_token", "long_url"], name: "index_urls_on_visitor_and_long_url", unique: true
   end
-
 end
